@@ -1,0 +1,43 @@
+# 3 kamerayla kargo desisi ölçümü — GPU servisi bağımlılıkları (Python 3.12, Windows, NVIDIA GPU).
+#
+# Önerilen yol: setup.ps1 (sırayı ve --no-deps bayraklarını o halleder). Bu dosya tek başına
+# "pip install -r requirements.txt" ile kurulmaz; elle kurulum sırası:
+#
+#   1) torch, CUDA 12.8 derlemesi (PyPI'deki varsayılan torch değil):
+#        pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+#
+#   2) utils3d-moge (MoGe'nin sabitlenmiş bağımlılığı; git gerekmesin diye zip arşivi):
+#        pip install https://github.com/EasternJournalist/utils3d-moge/archive/62f09d58509485564e24d5d9f6aac9ee9ebc0c37.zip
+#
+#   3) MoGe, bağımlılıksız (kendi listesi gradio, flex-gemm vb. git kaynakları içeriyor; çalışmak için gerekmiyor):
+#        pip install --no-deps https://github.com/microsoft/MoGe/archive/refs/heads/main.zip
+#
+#   4) Pi3 / Pi3X: zip'i indir, aç, düzenlenebilir ve bağımlılıksız kur:
+#        https://github.com/yyfz/Pi3/archive/refs/heads/main.zip  ->  pip install --no-deps -e <Pi3-main klasörü>
+#
+#   5) Aşağıdaki PyPI paketleri:
+#        pip install -r requirements.txt
+#
+# Test edilen sürümler (Python 3.12.10): torch 2.11.0+cu128, torchvision 0.26.0+cu128, moge 3.0.0,
+# utils3d_moge 1.7, pi3 0.1, opencv-python 5.0.0.93, numpy 2.5.4, rerun-sdk 0.41.0,
+# huggingface_hub 2.4.0, safetensors 0.8.0, einops 0.8.2, plyfile 1.1.5.
+#
+# opencv-python kullan (headless değil): live_pc.py pencere açıyor; cv2.aruco ikisinde de var.
+
+# MoGe çalışma bağımlılıkları
+click
+opencv-python
+scipy
+matplotlib
+trimesh
+huggingface-hub
+requests
+tqdm
+pillow
+
+# Pi3X, Rerun görünümü, .ply
+rerun-sdk
+safetensors
+einops
+plyfile
+numpy

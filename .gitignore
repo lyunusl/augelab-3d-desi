@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+venvs/
+env/
+
+# Çıktılar
+out/
+*.ply
+*.mp4
+
+# Model ağırlıkları
+models/
+checkpoints/
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+
+# Gizli bilgiler
+.env
+.env.*
+
+# Studio / sistem
+*.pmod.bak
+hmi_settings.ini
+hmi_history.db*
+Thumbs.db
+desktop.ini

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Koli Ölçüm</title>
+  <link rel="stylesheet" href="/ui/style.css">
+  <script type="importmap">
+    { "imports": {
+        "three": "/ui/vendor/three/three.module.js",
+        "three/addons/": "/ui/vendor/three/addons/"
+    } }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3L18.8 8 12 11.7 5.2 8 12 4.3ZM5 9.7l6 3.3v6.6l-6-3.3V9.7Zm8 9.9V13l6-3.3v6.6l-6 3.3Z" fill="currentColor"/></svg>
+      </div>
+      <div>
+        <h1>Koli Ölçüm</h1>
+        <p class="sub">3 sabit kamera · ArUco kart · desi = U × G × Y (cm³) / 3000</p>
+      </div>
+    </div>
+    <div class="controls">
+      <label class="field">
+        <span>Kart boyu</span>
+        <span class="inputwrap"><input id="marker" type="number" min="10" max="1000" step="1" value="100"><em>mm</em></span>
+      </label>
+      <label class="check"><input id="saveply" type="checkbox"><span>PLY kaydet</span></label>
+      <button id="scanCams" class="btn ghost" type="button" title="Tarayıcıya kamera izni verip bağlı kameraları listeler">Kameraları bul</button>
+      <span id="svc" class="pill pill-wait" title="Servis durumu"><i></i><b>Servis kontrol ediliyor…</b></span>
+    </div>
+  </header>
+
+  <main>
+    <section class="cams" id="cams" aria-label="Kamera kaynakları"></section>
+
+    <section class="runbar">
+      <button id="measure" class="btn primary big" type="button">
+        <span class="spin" aria-hidden="true"></span><span class="lbl">Ölç</span>
+      </button>
+      <div class="runinfo">
+        <div id="step" class="step">Hazır. En az 2 kaynak seçip <b>Ölç</b>'e basın.</div>
+        <div id="svcmsg" class="svcmsg"></div>
+      </div>
+      <button id="clear" class="btn ghost" type="button">Temizle</button>
+    </section>
+
+    <section class="results" id="results">
+      <div class="card view3d">
+        <div class="cardhead">
+          <h2>3D Görünüm</h2>
+          <div class="tools">
+            <label class="check small"><input id="showBoxes" type="checkbox" checked><span>Kutular</span></label>
+            <button id="resetView" class="btn ghost small" type="button">Görünümü sıfırla</button>
+          </div>
+        </div>
+        <div class="stage" id="stage">
+          <div class="empty" id="empty3d"><span>Henüz ölçüm yok. Kaynakları seçip <b>Ölç</b>'e basın.</span></div>
+          <div class="hint">Sol tuş: döndür · Sağ tuş: kaydır · Tekerlek: yakınlaştır</div>
+          <div class="cloudinfo" id="cloudinfo"></div>
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="card total">
+          <div>
+            <div class="k">Toplam desi</div>
+            <div class="v" id="totalDesi">–</div>
+          </div>
+          <div>
+            <div class="k">Koli</div>
+            <div class="v small" id="count">–</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="cardhead"><h2>Ölçümler</h2></div>
+          <table class="tbl" id="tbl">
+            <thead><tr><th>Koli no</th><th>U × G × Y (cm)</th><th class="num">Desi</th></tr></thead>
+            <tbody><tr class="placeholder"><td colspan="3">Ölçüm bekleniyor</td></tr></tbody>
+            <tfoot><tr><td colspan="2">Toplam</td><td class="num" id="tfootDesi">–</td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="card topcard">
+        <div class="cardhead"><h2>Üstten Görünüm</h2></div>
+        <div class="topview"><img id="topImg" alt="Üstten yükseklik haritası ve koli kutuları" hidden><div class="empty" id="emptyTop">–</div></div>
+        <details class="sheet">
+          <summary>Servise giden kareler</summary>
+          <img id="sheetImg" alt="Servise gönderilen kamera kareleri">
+        </details>
+        <div class="ply" id="plyPath"></div>
+      </div>
+    </section>
+  </main>
+
+  <template id="slotTpl">
+    <div class="card slot">
+      <div class="slothead">
+        <span class="badge"></span>
+        <select class="src" aria-label="Kaynak"></select>
+        <button class="btn ghost small pick" type="button" title="Görüntü dosyası yükle">Dosya</button>
+        <input class="file" type="file" accept="image/*" hidden>
+      </div>
+      <div class="preview">
+        <video muted playsinline autoplay hidden></video>
+        <img alt="" hidden>
+        <div class="ph">Kamera seçin ya da görüntü dosyasını buraya sürükleyin</div>
+        <div class="meta"></div>
+      </div>
+    </div>
+  </template>
+
+  <script type="module" src="/ui/app.js"></script>
+</body>
+</html>
